@@ -55,7 +55,7 @@
 #'
 #' @export
 #'
-#'
+#' @example inst/example-dr_process_output.R
 #'
 dr_output <- function(process_output,
                       output_col,

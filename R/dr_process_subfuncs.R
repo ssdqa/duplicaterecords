@@ -119,7 +119,7 @@ compute_dr <- function(cohort,
       summarise(row_ct = n()) %>%
       mutate(dup_yn = ifelse(row_ct > 1, T, F)) %>%
       group_by(!!!syms(grouped_list), dup_yn) %>%
-      summarise(duplicate_row_ct = sum(row_ct)) %>%
+      summarise(duplicate_rows = sum(row_ct)) %>%
       filter(dup_yn == T) %>%
       select(-dup_yn) %>%
       collect()
@@ -129,7 +129,7 @@ compute_dr <- function(cohort,
       summarise(row_pp = n()) %>%
       mutate(dup_yn = ifelse(row_pp > 1, T, F)) %>%
       group_by(!!!syms(grouped_list), !!sym(person_col), dup_yn) %>%
-      summarise(duplicate_rows = sum(row_pp)) %>%
+      summarise(duplicate_row_pp = sum(row_pp)) %>%
       #filter(dup_yn == T) %>%
       #select(-dup_yn) %>%
       collect()
@@ -156,7 +156,7 @@ compute_dr <- function(cohort,
     if(nrow(dupe_vals) < 1){
       dupe_vals <-
         dplyr::tibble(
-          duplicate_row_ct = 0L,
+          duplicate_rows = 0L,
           duplicate_definition = paste0(ie, ' ', varb)
         )
     }
@@ -164,7 +164,7 @@ compute_dr <- function(cohort,
     if(nrow(dupe_pts) < 1){
       dupe_pts <-
         dplyr::tibble(
-          duplicate_pt_ct = 0L,
+          duplicate_pt = 0L,
           duplicate_definition = paste0(ie, ' ', varb)
         )
     }
@@ -199,8 +199,8 @@ compute_dr <- function(cohort,
       left_join(all_meds) %>%
       left_join(site_meds) %>%
       mutate(
-        duplicate_row_ct = ifelse(is.na(duplicate_rows), 0, duplicate_rows),
-        duplicate_pt_ct = ifelse(is.na(duplicate_pt), 0, duplicate_pt),
+        duplicate_rows = ifelse(is.na(duplicate_rows), 0, duplicate_rows),
+        duplicate_pt = ifelse(is.na(duplicate_pt), 0, duplicate_pt),
         duplicate_row_prop = round(as.numeric(duplicate_rows) / as.numeric(total_rows), 2),
         duplicate_row_prop = ifelse(is.na(duplicate_row_prop), 0, duplicate_row_prop),
         duplicate_pt_prop = round(as.numeric(duplicate_pt) / as.numeric(total_pt), 2),

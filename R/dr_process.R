@@ -116,7 +116,7 @@
 #'
 #' @export
 #'
-#'
+#' @example inst/example-dr_process_output.R
 #'
 dr_process <- function(cohort,
                        dr_input_file,
@@ -236,7 +236,7 @@ dr_process <- function(cohort,
   ## parameter summary output
   print(cli::boxx(c('You can optionally use this dataframe in the accompanying',
                     '`dr_output` function. Here are the parameters you will need:', '', output_type$vector, '',
-                    'See ?uc_output for more details.'), padding = c(0,1,0,1),
+                    'See ?dr_output for more details.'), padding = c(0,1,0,1),
                   header = cli::col_cyan('Output Function Details')))
 
   if(patient_level_tbl){
