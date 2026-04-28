@@ -924,7 +924,7 @@ dr_ms_anom_la <- function(process_output,
       labs(fill = 'Avg. Proportion \n(Loess)',
            y ='Euclidean Distance',
            x = '',
-           title = paste0('Euclidean Distance for ', filter_definition))
+           title = paste0('Euclidean Distance for \n', filter_definition))
 
     p[['metadata']] <- tibble('pkg_backend' = 'plotly',
                               'tooltip' = TRUE)
