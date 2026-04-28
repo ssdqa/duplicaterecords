@@ -73,12 +73,14 @@ dr_output <- function(process_output,
 
     dr_output <- dr_ss_exp_cs(process_output = process_output,
                               output_col = output_col,
+                              text_wrapping_char = text_wrapping_char,
                               facet = facet)
 
   }else if(output_function == 'dr_ss_anom_cs'){
 
     dr_output <- dr_ss_anom_cs(process_output = process_output,
                                output_col = output_col,
+                               text_wrapping_char = text_wrapping_char,
                                facet = facet)
 
   }else if(output_function == 'dr_ms_exp_cs'){
@@ -86,6 +88,7 @@ dr_output <- function(process_output,
     dr_output <- dr_ms_exp_cs(process_output = process_output,
                               output_col = output_col,
                               filter_definition = filter_definition,
+                              text_wrapping_char = text_wrapping_char,
                               facet = facet,
                               large_n = large_n,
                               large_n_sites = large_n_sites)
@@ -94,6 +97,7 @@ dr_output <- function(process_output,
 
     dr_output <- dr_ms_anom_cs(process_output = process_output,
                                output_col = output_col,
+                               text_wrapping_char = text_wrapping_char,
                                large_n = large_n,
                                large_n_sites = large_n_sites)
 
@@ -101,6 +105,7 @@ dr_output <- function(process_output,
 
     dr_output <- dr_ss_exp_la(process_output = process_output,
                               output_col = output_col,
+                              text_wrapping_char = text_wrapping_char,
                               facet = facet)
 
   }else if(output_function == 'dr_ss_anom_la'){
@@ -108,6 +113,7 @@ dr_output <- function(process_output,
     dr_output <- dr_ss_anom_la(process_output = process_output,
                                output_col = output_col,
                                filter_definition = filter_definition,
+                               text_wrapping_char = text_wrapping_char,
                                facet = facet)
 
   }else if(output_function == 'dr_ms_exp_la'){
@@ -115,6 +121,7 @@ dr_output <- function(process_output,
     dr_output <- dr_ms_exp_la(process_output = process_output,
                               output_col = output_col,
                               filter_definition = filter_definition,
+                              text_wrapping_char = text_wrapping_char,
                               facet = facet,
                               large_n = large_n,
                               large_n_sites = large_n_sites)
@@ -123,6 +130,7 @@ dr_output <- function(process_output,
 
     dr_output <- dr_ms_anom_la(process_output = process_output,
                                filter_definition = filter_definition,
+                               text_wrapping_char = text_wrapping_char,
                                large_n = large_n,
                                large_n_sites = large_n_sites)
 
