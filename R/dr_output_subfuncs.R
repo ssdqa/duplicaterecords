@@ -138,13 +138,13 @@ dr_ms_exp_cs <- function(process_output,
     if(output_col %in% c('duplicate_row_prop', 'duplicate_pt_prop')){
       plt <- tbl_use %>%
         filter(duplicate_definition %in% filter_definition) %>%
-        ggplot(aes(x = duplicate_definition, y = site, fill = !!sym(output_col),
+        ggplot(aes(y = duplicate_definition, x = site, fill = !!sym(output_col),
                    tooltip = tooltip)) +
         geom_tile_interactive() +
         scale_fill_squba(palette = 'diverging', discrete = FALSE) +
         theme_minimal() +
         facet_wrap((facet)) +
-        scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = text_wrapping_char)) +
+        scale_y_discrete(labels = function(x) stringr::str_wrap(x, width = text_wrapping_char)) +
         labs(x = 'Duplicate Definition',
              y = 'Site')
     }else{
@@ -517,10 +517,10 @@ dr_ss_anom_cs <- function(process_output,
 
   if(output_col=='outlier_fact'){
     y_title = paste0('Number of Patients with Duplicate Rows \n+/- ', n_sd, ' SD Away from Mean')
-    x_lab = 'Number of Anomalous Patients with Duplicate Rows'
+    x_lab = 'Number of Anomalous Patients \nwith Duplicate Rows'
   }else if(output_col=='prop_outlier_fact'){
     y_title = paste0('Proportion of Patients with Duplicate Rows \n+/- ', n_sd, ' SD Away from Mean')
-    x_lab = 'Proportion of Anomalous Patients with Duplicate Rows'
+    x_lab = 'Proportion of Anomalous Patients \nwith Duplicate Rows'
   }else if(output_col=='outlier_tot'){
     y_title = paste0('Number of Total Patients \n+/- ', n_sd, ' SD Away from Mean')
     x_lab = 'Number of Anomalous Total Patients'
@@ -590,10 +590,10 @@ dr_ss_exp_la <- function(process_output,
   p <- process_output %>%
     ggplot(aes(y = !!sym(output_col), x = time_start, color = duplicate_definition)) +
     geom_line() +
-    scale_color_squba() +
+    scale_color_squba(labels = function(x) stringr::str_wrap(x, width = text_wrapping_char)) +
     theme_minimal() +
     facet_wrap((facet)) +
-    scale_color_discrete(labels = function(x) stringr::str_wrap(x, width = text_wrapping_char)) +
+    #scale_color_discrete(labels = function(x) stringr::str_wrap(x, width = text_wrapping_char)) +
     labs(color = 'Duplicate Definition',
          y = xaxis,
          x = 'Time')
