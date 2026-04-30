@@ -136,9 +136,12 @@ compute_dr <- function(cohort,
       collect()
 
     ## proportion
+    ie <- dr_list[[i]]$include_exclude
+
     total_pts <- cohort %>%
       summarise(total_pt = n_distinct(person_id),
-                duplicate_definition = varb) %>%
+                duplicate_definition = varb,
+                duplicate_columns = paste0(ie, ' ', varb)) %>%
       collect()
 
     dupe_pts <- per_pt %>%
@@ -149,6 +152,7 @@ compute_dr <- function(cohort,
     total_rows <- tbl_use %>%
       summarise(
         duplicate_definition = varb,
+        duplicate_columns = paste0(ie, ' ', varb),
         total_rows = n()
       ) %>% collect()
 
@@ -156,7 +160,8 @@ compute_dr <- function(cohort,
       dupe_vals <-
         dplyr::tibble(
           duplicate_rows = 0L,
-          duplicate_definition = varb
+          duplicate_definition = varb,
+          duplicate_columns = paste0(ie, ' ', varb)
         )
     }
 
@@ -164,7 +169,8 @@ compute_dr <- function(cohort,
       dupe_pts <-
         dplyr::tibble(
           duplicate_pt = 0L,
-          duplicate_definition = varb
+          duplicate_definition = varb,
+          duplicate_columns = paste0(ie, ' ', varb)
         )
     }
 
@@ -177,7 +183,8 @@ compute_dr <- function(cohort,
       ungroup(!!sym(person_col)) %>%
       summarise(median_site_with0s = as.numeric(median(duplicate_row_pp)),
                 median_site_without0s = as.numeric(median(duplicate_row_pp[duplicate_row_pp!=0])),
-                duplicate_definition = varb) %>%
+                duplicate_definition = varb,
+                duplicate_columns = paste0(ie, ' ', varb)) %>%
       mutate(median_site_without0s = ifelse(is.na(median_site_without0s),
                                             0L, median_site_without0s))
 
@@ -185,7 +192,8 @@ compute_dr <- function(cohort,
       ungroup(!!sym(person_col), !!sym(site_col)) %>%
       summarise(median_all_with0s = as.numeric(median(duplicate_row_pp)),
                 median_all_without0s = as.numeric(median(duplicate_row_pp[duplicate_row_pp!=0])),
-                duplicate_definition = varb) %>%
+                duplicate_definition = varb,
+                duplicate_columns = paste0(ie, ' ', varb)) %>%
       mutate(median_all_without0s = ifelse(is.na(median_all_without0s),
                                            0L, median_all_without0s))
 
@@ -193,8 +201,10 @@ compute_dr <- function(cohort,
     duplicate_cts <-
       total_rows %>%
       left_join(total_pts) %>%
-      left_join(dupe_vals %>% mutate(duplicate_definition = varb)) %>%
-      left_join(dupe_pts %>% mutate(duplicate_definition = varb)) %>%
+      left_join(dupe_vals %>% mutate(duplicate_definition = varb,
+                                     duplicate_columns = paste0(ie, ' ', varb))) %>%
+      left_join(dupe_pts %>% mutate(duplicate_definition = varb,
+                                    duplicate_columns = paste0(ie, ' ', varb))) %>%
       left_join(all_meds) %>%
       left_join(site_meds) %>%
       mutate(
@@ -207,7 +217,8 @@ compute_dr <- function(cohort,
       )
 
     check_concepts[[i]] <- duplicate_cts
-    pt_concepts[[i]] <- per_pt %>% mutate(duplicate_definition = varb)
+    pt_concepts[[i]] <- per_pt %>% mutate(duplicate_definition = varb,
+                                          duplicate_columns = paste0(ie, ' ', varb))
 
   }
 
@@ -240,7 +251,7 @@ compute_dr_ssanom <- function(cohort,
     collect() %>% pull(ct)
 
   all_vals <- dr_ptlv_rslt %>%
-    group_by(site, duplicate_definition) %>%
+    group_by(site, duplicate_definition, duplicate_columns) %>%
     summarise(mean_tot=mean(duplicate_row_pp),
               sd_tot=sd(duplicate_row_pp),
               n_tot=n_tot)
@@ -251,7 +262,7 @@ compute_dr_ssanom <- function(cohort,
            abs_z = abs(zscore_tot),
            outlier = case_when(zscore_tot > n_sd ~ 1L,
                                TRUE ~ 0L)) %>%
-    group_by(site, duplicate_definition, n_tot, sd_tot, mean_tot) %>%
+    group_by(site, duplicate_definition, duplicate_columns, n_tot, sd_tot, mean_tot) %>%
     mutate(outlier_tot = sum(outlier),
            prop_outlier_tot = round(outlier_tot / n_tot, 3)) %>%
     select(group_vars(.), n_tot, outlier_tot, mean_tot, sd_tot, prop_outlier_tot) %>%
@@ -259,7 +270,7 @@ compute_dr_ssanom <- function(cohort,
 
   fact_vals <- dr_ptlv_rslt %>%
     filter(duplicate_row_pp != 0) %>%
-    group_by(site, duplicate_definition) %>%
+    group_by(site, duplicate_definition, duplicate_columns) %>%
     summarise(mean_fact=mean(duplicate_row_pp),
               sd_fact=sd(duplicate_row_pp),
               n_w_fact=n())
@@ -271,7 +282,7 @@ compute_dr_ssanom <- function(cohort,
            abs_z = abs(zscore_fact),
            outlier = case_when(zscore_fact > n_sd ~ 1L,
                                TRUE ~ 0L)) %>%
-    group_by(site, duplicate_definition, n_w_fact, sd_fact, mean_fact) %>%
+    group_by(site, duplicate_definition, duplicate_columns, n_w_fact, sd_fact, mean_fact) %>%
     mutate(outlier_fact = sum(outlier),
            prop_outlier_fact = round(outlier_fact / n_w_fact, 3)) %>%
     select(group_vars(.), n_w_fact, outlier_fact, mean_fact, sd_fact, prop_outlier_fact) %>%

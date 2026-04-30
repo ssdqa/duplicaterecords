@@ -17,4 +17,4 @@ utils::globalVariables(c('.', 'allsite_median', 'allsite_q1', 'allsite_q3',
                          'duplicate_rows', 'value', 'duplicate_definition', 'x', 'y',
                          'zscore_fact', 'zscore_tot', 'zscr', 'mean_allsiteprop',
                          'duplicate_row_pp', 'row_ct', 'row_pp', 'dup_yn',
-                         'sd_threshold'))
+                         'sd_threshold', 'duplicate_columns'))
