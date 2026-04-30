@@ -24,6 +24,7 @@
 #'
 #'   A table with information about each of the duplicate record definitions that should be examined
 #'   in the analysis. This table should contain the following columns:
+#'   - `definition_alias` | *character* | a string to identify the definition of duplication used for the analysis
 #'   - `domain_tbl` | *character* | the CDM table that should be evaluated for duplicate rows
 #'   - `duplicate_columns` | *character* | the names of the columns that define duplication, either by including or excluding them
 #'   - `include_exclude` | *character* | string to control whether the duplicate_columns are all included or all excluded to define duplicates

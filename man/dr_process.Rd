@@ -40,6 +40,7 @@ limit the search window for the analyses in this module.}
 A table with information about each of the duplicate record definitions that should be examined
 in the analysis. This table should contain the following columns:
 \itemize{
+\item \code{definition_alias} | \emph{character} | a string to identify the definition of duplication used for the analysis
 \item \code{domain_tbl} | \emph{character} | the CDM table that should be evaluated for duplicate rows
 \item \code{duplicate_columns} | \emph{character} | the names of the columns that define duplication, either by including or excluding them
 \item \code{include_exclude} | \emph{character} | string to control whether the duplicate_columns are all included or all excluded to define duplicates

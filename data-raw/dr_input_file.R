@@ -1,6 +1,8 @@
 ## code to prepare `DATASET` dataset goes here
 
-dr_input_file_omop <- dplyr::tibble('domain_tbl' = c('visit_occurrence',
+dr_input_file_omop <- dplyr::tibble('definition_alias' = c('duplicate visits per day',
+                                                           'conditions without PK'),
+                                     'domain_tbl' = c('visit_occurrence',
                                                       'condition_occurrence'),
                                      'duplicate_columns' = c('visit_concept_id,visit_start_date,visit_end_date',
                                                              'condition_occurrence_id'),
@@ -15,7 +17,9 @@ dr_input_file_omop <- dplyr::tibble('domain_tbl' = c('visit_occurrence',
 usethis::use_data(dr_input_file_omop, overwrite = TRUE)
 
 
-dr_input_file_pcornet <- dplyr::tibble('domain_tbl' = c('lab_result_cm',
+dr_input_file_pcornet <- dplyr::tibble('definition_alias' = c('labs per visit + date',
+                                                              'procedures without PK'),
+                                       'domain_tbl' = c('lab_result_cm',
                                                         'procedures'),
                                        'duplicate_columns' = c('encounterid,result_date,lab_loinc',
                                                                'proceduresid'),

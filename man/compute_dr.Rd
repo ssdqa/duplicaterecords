@@ -19,6 +19,7 @@ compute_dr(
 \item{dr_tbl}{A table with information about each of the definitions of duplication that should be examined
 in the analysis. This table should contain the following columns:
 \itemize{
+\item \code{definition_alias} | \emph{character} | a string to identify the definition of duplication used for the analysis
 \item \code{domain_tbl} | \emph{character} | the CDM table that should be evaluated for duplicate rows
 \item \code{duplicate_columns} | \emph{character} | the name of the field where unmapped values should be identified
 \item \code{include_exclude} | \emph{character} | string to control whether the duplicate_columns are all included or all excluded to define duplicates

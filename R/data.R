@@ -12,8 +12,9 @@
 #' package and can be accessed with `ssdqa.gen::`
 #'
 #' @format ## `dr_input_file_omop`
-#' A data frame with 7 columns
+#' A data frame with 8 columns
 #' \describe{
+#'   \item{definition_alias}{A string alias to identify the definition of duplication used for the analysis}
 #'   \item{domain_tbl}{The name of the CDM table where the variable can be found}
 #'   \item{duplicated_columns}{A comma separated string with columns names to be included or excluded to determine how duplicates are identified}
 #'   \item{include_exclude}{A string, either include or exclude, defining what action should be taken in relation to the duplicate_columns to properly define duplicates}
@@ -38,8 +39,9 @@
 #' package and can be accessed with `ssdqa.gen::`
 #'
 #' @format ## `dr_input_file_pcornet`
-#' A data frame with 8 columns
+#' A data frame with 9 columns
 #' \describe{
+#'   \item{definition_alias}{A string alias to identify the definition of duplication used for the analysis}
 #'   \item{domain_tbl}{The name of the CDM table where the variable can be found}
 #'   \item{duplicated_columns}{A comma separated string with columns names to be included or excluded to determine how duplicates are identified}
 #'   \item{include_exclude}{A string, either include or exclude, defining what action should be taken in relation to the duplicate_columns to properly define duplicates}

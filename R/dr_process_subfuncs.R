@@ -4,6 +4,7 @@
 #' @param cohort table of cohort members with at least `site`, `person_id`, `start_date`, and `end_date`
 #' @param dr_tbl A table with information about each of the definitions of duplication that should be examined
 #'   in the analysis. This table should contain the following columns:
+#'   - `definition_alias` | *character* | a string to identify the definition of duplication used for the analysis
 #'   - `domain_tbl` | *character* | the CDM table that should be evaluated for duplicate rows
 #'   - `duplicate_columns` | *character* | the name of the field where unmapped values should be identified
 #'   - `include_exclude` | *character* | string to control whether the duplicate_columns are all included or all excluded to define duplicates
@@ -42,7 +43,7 @@ compute_dr <- function(cohort,
 
   for(i in 1:length(dr_list)) {
 
-    varb <- dr_list[[i]]$duplicate_columns
+    varb <- dr_list[[i]]$definition_alias
 
     cli::cli_inform(paste0('Starting ', varb))
 
@@ -135,11 +136,9 @@ compute_dr <- function(cohort,
       collect()
 
     ## proportion
-    ie <- dr_list[[i]]$include_exclude
-
     total_pts <- cohort %>%
       summarise(total_pt = n_distinct(person_id),
-                duplicate_definition = paste0(ie, ' ', varb)) %>%
+                duplicate_definition = varb) %>%
       collect()
 
     dupe_pts <- per_pt %>%
@@ -149,7 +148,7 @@ compute_dr <- function(cohort,
 
     total_rows <- tbl_use %>%
       summarise(
-        duplicate_definition = paste0(ie, ' ', varb),
+        duplicate_definition = varb,
         total_rows = n()
       ) %>% collect()
 
@@ -157,7 +156,7 @@ compute_dr <- function(cohort,
       dupe_vals <-
         dplyr::tibble(
           duplicate_rows = 0L,
-          duplicate_definition = paste0(ie, ' ', varb)
+          duplicate_definition = varb
         )
     }
 
@@ -165,7 +164,7 @@ compute_dr <- function(cohort,
       dupe_pts <-
         dplyr::tibble(
           duplicate_pt = 0L,
-          duplicate_definition = paste0(ie, ' ', varb)
+          duplicate_definition = varb
         )
     }
 
@@ -178,7 +177,7 @@ compute_dr <- function(cohort,
       ungroup(!!sym(person_col)) %>%
       summarise(median_site_with0s = as.numeric(median(duplicate_row_pp)),
                 median_site_without0s = as.numeric(median(duplicate_row_pp[duplicate_row_pp!=0])),
-                duplicate_definition = paste0(ie, ' ', varb)) %>%
+                duplicate_definition = varb) %>%
       mutate(median_site_without0s = ifelse(is.na(median_site_without0s),
                                             0L, median_site_without0s))
 
@@ -186,7 +185,7 @@ compute_dr <- function(cohort,
       ungroup(!!sym(person_col), !!sym(site_col)) %>%
       summarise(median_all_with0s = as.numeric(median(duplicate_row_pp)),
                 median_all_without0s = as.numeric(median(duplicate_row_pp[duplicate_row_pp!=0])),
-                duplicate_definition = paste0(ie, ' ', varb)) %>%
+                duplicate_definition = varb) %>%
       mutate(median_all_without0s = ifelse(is.na(median_all_without0s),
                                            0L, median_all_without0s))
 
@@ -194,8 +193,8 @@ compute_dr <- function(cohort,
     duplicate_cts <-
       total_rows %>%
       left_join(total_pts) %>%
-      left_join(dupe_vals %>% mutate(duplicate_definition = paste0(ie, ' ', varb))) %>%
-      left_join(dupe_pts %>% mutate(duplicate_definition = paste0(ie, ' ', varb))) %>%
+      left_join(dupe_vals %>% mutate(duplicate_definition = varb)) %>%
+      left_join(dupe_pts %>% mutate(duplicate_definition = varb)) %>%
       left_join(all_meds) %>%
       left_join(site_meds) %>%
       mutate(
@@ -208,7 +207,7 @@ compute_dr <- function(cohort,
       )
 
     check_concepts[[i]] <- duplicate_cts
-    pt_concepts[[i]] <- per_pt %>% mutate(duplicate_definition = paste0(ie, ' ', varb))
+    pt_concepts[[i]] <- per_pt %>% mutate(duplicate_definition = varb)
 
   }
 
