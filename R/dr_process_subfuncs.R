@@ -137,11 +137,12 @@ compute_dr <- function(cohort,
 
     ## proportion
     ie <- dr_list[[i]]$include_exclude
+    cls <- dr_list[[i]]$duplicate_columns
 
     total_pts <- cohort %>%
       summarise(total_pt = n_distinct(person_id),
                 duplicate_definition = varb,
-                duplicate_columns = paste0(ie, ' ', varb)) %>%
+                duplicate_columns = paste0(ie, ' ', cls)) %>%
       collect()
 
     dupe_pts <- per_pt %>%
@@ -152,7 +153,7 @@ compute_dr <- function(cohort,
     total_rows <- tbl_use %>%
       summarise(
         duplicate_definition = varb,
-        duplicate_columns = paste0(ie, ' ', varb),
+        duplicate_columns = paste0(ie, ' ', cls),
         total_rows = n()
       ) %>% collect()
 
@@ -161,7 +162,7 @@ compute_dr <- function(cohort,
         dplyr::tibble(
           duplicate_rows = 0L,
           duplicate_definition = varb,
-          duplicate_columns = paste0(ie, ' ', varb)
+          duplicate_columns = paste0(ie, ' ', cls)
         )
     }
 
@@ -170,7 +171,7 @@ compute_dr <- function(cohort,
         dplyr::tibble(
           duplicate_pt = 0L,
           duplicate_definition = varb,
-          duplicate_columns = paste0(ie, ' ', varb)
+          duplicate_columns = paste0(ie, ' ', cls)
         )
     }
 
@@ -184,7 +185,7 @@ compute_dr <- function(cohort,
       summarise(median_site_with0s = as.numeric(median(duplicate_row_pp)),
                 median_site_without0s = as.numeric(median(duplicate_row_pp[duplicate_row_pp!=0])),
                 duplicate_definition = varb,
-                duplicate_columns = paste0(ie, ' ', varb)) %>%
+                duplicate_columns = paste0(ie, ' ', cls)) %>%
       mutate(median_site_without0s = ifelse(is.na(median_site_without0s),
                                             0L, median_site_without0s))
 
@@ -193,7 +194,7 @@ compute_dr <- function(cohort,
       summarise(median_all_with0s = as.numeric(median(duplicate_row_pp)),
                 median_all_without0s = as.numeric(median(duplicate_row_pp[duplicate_row_pp!=0])),
                 duplicate_definition = varb,
-                duplicate_columns = paste0(ie, ' ', varb)) %>%
+                duplicate_columns = paste0(ie, ' ', cls)) %>%
       mutate(median_all_without0s = ifelse(is.na(median_all_without0s),
                                            0L, median_all_without0s))
 
@@ -202,9 +203,9 @@ compute_dr <- function(cohort,
       total_rows %>%
       left_join(total_pts) %>%
       left_join(dupe_vals %>% mutate(duplicate_definition = varb,
-                                     duplicate_columns = paste0(ie, ' ', varb))) %>%
+                                     duplicate_columns = paste0(ie, ' ', cls))) %>%
       left_join(dupe_pts %>% mutate(duplicate_definition = varb,
-                                    duplicate_columns = paste0(ie, ' ', varb))) %>%
+                                    duplicate_columns = paste0(ie, ' ', cls))) %>%
       left_join(all_meds) %>%
       left_join(site_meds) %>%
       mutate(
@@ -218,7 +219,7 @@ compute_dr <- function(cohort,
 
     check_concepts[[i]] <- duplicate_cts
     pt_concepts[[i]] <- per_pt %>% mutate(duplicate_definition = varb,
-                                          duplicate_columns = paste0(ie, ' ', varb))
+                                          duplicate_columns = paste0(ie, ' ', cls))
 
   }
 
