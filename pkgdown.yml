@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   multisite_independent: multisite_independent.html
-last_built: 2026-05-13T20:30Z
+last_built: 2026-05-13T20:35Z
 urls:
   reference: https://ssdqa.github.io/duplicaterecords/reference
   article: https://ssdqa.github.io/duplicaterecords/articles
