@@ -1,0 +1,38 @@
+# Duplicate Records
+
+The Duplicate Records module allows the user to provide a set of columns
+to include or exclude to define what should be considered duplication.
+The module will then evaluate the proportion of rows and patients with
+duplicates, as well as the median number of duplicates per patient.
+
+## Installation
+
+You can install the development version of this package like so:
+
+``` r
+
+devtools::install_github('ssdqa/duplicaterecords')
+```
+
+# Package index
+
+## Module Execution
+
+- [`dr_process()`](https://ssdqa.github.io/duplicaterecords/reference/dr_process.md)
+  : Duplicate Records
+- [`dr_output()`](https://ssdqa.github.io/duplicaterecords/reference/dr_output.md)
+  : Duplicate Records – Output Generation
+
+## Sample Input
+
+- [`dr_input_file_omop`](https://ssdqa.github.io/duplicaterecords/reference/dr_input_file_omop.md)
+  : DR Sample Input File – OMOP
+- [`dr_input_file_pcornet`](https://ssdqa.github.io/duplicaterecords/reference/dr_input_file_pcornet.md)
+  : DR Sample Input File – PCORnet
+
+# Articles
+
+### All vignettes
+
+- [Multi-Site Analysis for Independent Data
+  Sources](https://ssdqa.github.io/duplicaterecords/articles/multisite_independent.md):
