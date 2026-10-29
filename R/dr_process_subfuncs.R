@@ -141,8 +141,8 @@ compute_dr <- function(cohort,
 
     total_pts <- cohort %>%
       summarise(total_pt = n_distinct(person_id),
-                duplicate_definition = varb,
-                duplicate_columns = paste0(ie, ' ', cls)) %>%
+                duplicate_definition = varb) %>%
+      mutate(duplicate_columns = paste0(ie, ' ', cls)) %>%
       collect()
 
     dupe_pts <- per_pt %>%
@@ -153,9 +153,10 @@ compute_dr <- function(cohort,
     total_rows <- tbl_use %>%
       summarise(
         duplicate_definition = varb,
-        duplicate_columns = paste0(ie, ' ', cls),
         total_rows = n()
-      ) %>% collect()
+      ) %>%
+      mutate(duplicate_columns = paste0(ie, ' ', cls)) %>%
+      collect()
 
     if(nrow(dupe_vals) < 1){
       dupe_vals <-
@@ -184,19 +185,19 @@ compute_dr <- function(cohort,
       ungroup(!!sym(person_col)) %>%
       summarise(median_site_with0s = as.numeric(median(duplicate_row_pp)),
                 median_site_without0s = as.numeric(median(duplicate_row_pp[duplicate_row_pp!=0])),
-                duplicate_definition = varb,
-                duplicate_columns = paste0(ie, ' ', cls)) %>%
+                duplicate_definition = varb) %>%
       mutate(median_site_without0s = ifelse(is.na(median_site_without0s),
-                                            0L, median_site_without0s))
+                                            0L, median_site_without0s),
+             duplicate_columns = paste0(ie, ' ', cls))
 
     all_meds <- per_pt %>%
       ungroup(!!sym(person_col), !!sym(site_col)) %>%
       summarise(median_all_with0s = as.numeric(median(duplicate_row_pp)),
                 median_all_without0s = as.numeric(median(duplicate_row_pp[duplicate_row_pp!=0])),
-                duplicate_definition = varb,
-                duplicate_columns = paste0(ie, ' ', cls)) %>%
+                duplicate_definition = varb) %>%
       mutate(median_all_without0s = ifelse(is.na(median_all_without0s),
-                                           0L, median_all_without0s))
+                                           0L, median_all_without0s),
+             duplicate_columns = paste0(ie, ' ', cls))
 
     ## combined
     duplicate_cts <-
