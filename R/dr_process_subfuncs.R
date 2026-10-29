@@ -140,7 +140,7 @@ compute_dr <- function(cohort,
     cls <- dr_list[[i]]$duplicate_columns
 
     total_pts <- cohort %>%
-      summarise(total_pt = n_distinct(person_id),
+      summarise(total_pt = n_distinct(!!sym(person_col)),
                 duplicate_definition = varb) %>%
       mutate(duplicate_columns = paste0(ie, ' ', cls)) %>%
       collect()
@@ -148,7 +148,7 @@ compute_dr <- function(cohort,
     dupe_pts <- per_pt %>%
       group_by(!!!syms(grouped_list)) %>%
       filter(dup_yn == T) %>%
-      summarise(duplicate_pt = n_distinct(person_id))
+      summarise(duplicate_pt = n_distinct(!!sym(person_col)))
 
     total_rows <- tbl_use %>%
       summarise(
@@ -178,8 +178,12 @@ compute_dr <- function(cohort,
 
     ## per patient
     per_pt <- per_pt %>%
+      group_by(!!sym(person_col)) %>%
+      mutate(dup_check = ifelse(any(dup_yn == T), T, F)) %>%
+      filter(dup_yn == dup_check) %>%
       mutate(duplicate_row_pp = ifelse(dup_yn, duplicate_row_pp, 0L)) %>%
-      select(-dup_yn)
+      select(-c(dup_yn, dup_check)) %>%
+      group_by(!!!syms(grouped_list))
 
     site_meds <- per_pt %>%
       ungroup(!!sym(person_col)) %>%
