@@ -127,6 +127,10 @@ dr_process_example <- dr_process(cohort = cohort,
 #> Warning: Missing values are always removed in SQL aggregation functions.
 #> Use `na.rm = TRUE` to silence this warning
 #> This warning is displayed once every 8 hours.
+#> Warning: `as.sql()` was deprecated in dbplyr 2.6.0.
+#> ℹ Please use `as_table_path()` instead.
+#> ℹ The deprecated feature was likely used in the argos package.
+#>   Please report the issue to the authors.
 #> ┌ Output Function Details ─────────────────────────────────────┐
 #> │ You can optionally use this dataframe in the accompanying    │
 #> │ `dr_output` function. Here are the parameters you will need: │
@@ -137,10 +141,10 @@ dr_process_example <- dr_process(cohort = cohort,
 
 dr_process_example
 #> # A tibble: 2 × 14
-#>   site     duplicate_definition     duplicate_columns        total_rows total_pt
-#>   <chr>    <chr>                    <chr>                         <int>    <int>
-#> 1 combined duplicate visits per day include visit_concept_i…       1627       12
-#> 2 combined conditions without PK    exclude condition_occur…         58       12
+#>   site     duplicate_definition     total_rows duplicate_columns        total_pt
+#>   <chr>    <chr>                         <int> <chr>                       <int>
+#> 1 combined duplicate visits per day       1627 include visit_concept_i…       12
+#> 2 combined conditions without PK            58 exclude condition_occur…       12
 #> # ℹ 9 more variables: duplicate_rows <int>, duplicate_pt <int>,
 #> #   median_all_with0s <dbl>, median_all_without0s <dbl>,
 #> #   median_site_with0s <dbl>, median_site_without0s <dbl>,
